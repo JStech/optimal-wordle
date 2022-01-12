@@ -2,9 +2,28 @@
 import random
 
 class Wordle:
+    @staticmethod
+    def eval_guess(guess, word):
+        n = len(word)
+
+        outcome = [0]*n
+        used = [False]*n
+        for i in range(n):
+            if guess[i] == word[i]:
+                outcome[i] = 2
+                used[i] = True
+        for i in range(n):
+            for j in range(n):
+                if guess[i] == word[j] and not used[j]:
+                    outcome[i] = 1
+                    used[j] = True
+
+        return outcome
+
     def __init__(self, wordlist, n=5):
-        self.words=list(filter(lambda w: len(w)==5 and w.isalpha(), (w.rstrip().upper() for w in wordlist)))
-        self.n=5
+        self.n=n
+        self.words=list(filter(lambda w: len(w)==self.n and w.isalpha(), (w.rstrip().upper() for w in wordlist)))
+        print("Wordle started with {} {}-letter words".format(len(self.words), self.n))
         self.turn=0
         self.word=None
 
@@ -12,19 +31,13 @@ class Wordle:
         self.word=random.choice(self.words)
         self.turn=0
 
-
     def guess(self, guess):
         self.turn += 1
 
         if guess not in self.words:
             return "Invalid guess--not in wordlist. Lose your turn. Turn {}.".format(self.turn)
 
-        outcome = [0]*self.n
-        for i in range(self.n):
-            if guess[i] == self.word[i]:
-                outcome[i] = 2
-            elif guess[i] in self.word:
-                outcome[i] = 1
+        outcome = self.eval_guess(guess, self.word)
 
         ret_string = ('  ' + ''.join(' .O'[o] for o in outcome) + ' turn {}'.format(self.turn))
         if outcome == [2]*self.n:
@@ -38,7 +51,7 @@ class Wordle:
             guess = input("? ").upper()
             if guess == 'I GIVE UP':
                 print("The word was", self.word)
-                exit()
+                break
             print(self.guess(guess))
 
 
