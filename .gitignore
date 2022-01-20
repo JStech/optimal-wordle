@@ -1,2 +1,4 @@
 __pycache__/
 entropy_*.txt
+*.swp
+values_2_1_*

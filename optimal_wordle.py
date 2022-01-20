@@ -33,6 +33,7 @@ if __name__ == "__main__":
     print("created wordlist")
     for n in range(2, 6):
         w = wordle.Wordle(words, n)
+        if len(w.words) == 0: continue
 
         with Pool(4) as p:
             entropies = p.map(EntropyFunction(w.words), w.words)
