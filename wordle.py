@@ -5,6 +5,7 @@ class Wordle:
     @staticmethod
     def eval_guess(guess, word):
         n = len(word)
+        assert len(word) == len(guess), "Can't evaluate guess {} against solution {}".format(guess, word)
 
         outcome = [0]*n
         used = [False]*n
